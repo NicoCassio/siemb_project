@@ -24,7 +24,8 @@ def main():
             )"""
     create_table_logs = """ CREATE TABLE IF NOT EXISTS logs (
             id INTEGER PRIMARY KEY,
-            user_id INTEGER NOT NULL,
+            user_id    INTEGER NOT NULL,
+            datetime   TEXT NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users (id)
             )"""
 
