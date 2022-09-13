@@ -1,7 +1,31 @@
 import gs
+import logging
 import sqlite3
+import sys
+import time
+
+def handle_unhandled_exceptions(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    logging.critical('Unhandled exception', exc_info=(exc_type, exc_value, exc_traceback))
+    logging.info('END')
 
 def main():
+    now   = time.localtime()
+    year  = now.tm_year
+    month = now.tm_mon
+    day   = now.tm_mday
+
+    logging.basicConfig(filename=f'logs/{year}_{month}_{day}_update_db.log',
+                        level=logging.DEBUG,
+                        format='%(asctime)s - [%(levelname)s] %(message)s',
+                        datefmt='%Y/%m/%d %H:%M:%S')
+
+    sys.excepthook = handle_unhandled_exceptions
+
+    logging.info('START')
+
     gs_data = gs.get_data()
 
     DATABASE = 'access.db'

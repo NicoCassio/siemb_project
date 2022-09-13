@@ -1,5 +1,14 @@
+import logging
 import sqlite3
+import sys
 import time
+
+def handle_unhandled_exceptions(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    logging.critical('Unhandled exception', exc_info=(exc_type, exc_value, exc_traceback))
+    logging.info('END')
 
 def has_permission(code=None):
     DATABASE = 'access.db'
@@ -25,7 +34,7 @@ def has_permission(code=None):
         if res:
             for row in res:
                 name = res[0]
-            print(f'{name} entered')
+            logging.info(f'{name} entered')
 
         query = 'INSERT INTO logs(user_id, datetime) SELECT user_id, ? FROM codes WHERE code = ?'
         cur.execute(query, (access_time, code))
