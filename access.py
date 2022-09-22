@@ -14,6 +14,7 @@ def handle_unhandled_exceptions(exc_type, exc_value, exc_traceback):
 def has_permission(code=None):
     DATABASE = 'access.db'
     con = sqlite3.connect(DATABASE)
+    con.execute('PRAGMA foreign_keys = ON')
     cur = con.cursor()
 
     query = 'SELECT code FROM codes'

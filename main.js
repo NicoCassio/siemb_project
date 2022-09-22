@@ -33,14 +33,14 @@ function receiveMsg(websocket) {
       name.innerText = user.name
       const code = row.insertCell(-1)
       code.innerText = user.code
+
       const edit = row.insertCell(-1)
-      const btn = document.createElement('button')
-      btn.classList.add('btn')
-      btn.classList.add('btn-sm')
-      btn.setAttribute('data-bs-toggle', 'modal')
-      btn.setAttribute('data-bs-target', '#edit-modal')
-      btn.addEventListener('click', () => {
-        console.log(row.rowIndex)
+      const btnEdit = document.createElement('button')
+      btnEdit.classList.add('btn')
+      btnEdit.classList.add('btn-sm')
+      btnEdit.setAttribute('data-bs-toggle', 'modal')
+      btnEdit.setAttribute('data-bs-target', '#edit-modal')
+      btnEdit.addEventListener('click', () => {
         const userId = document.querySelector('#user-id')
         userId.innerText = user.id
         const inputName = document.querySelector('#floating-input-name')
@@ -48,12 +48,31 @@ function receiveMsg(websocket) {
         const inputCode = document.querySelector('#floating-input-code')
         inputCode.value = user.code
       })
-      const img = document.createElement('img')
-      img.src = './pencil-square.svg'
-      img.width = '16'
-      img.height = '16'
-      btn.append(img)
-      edit.append(btn)
+      const imgEdit = document.createElement('img')
+      imgEdit.src = './pencil-square.svg'
+      imgEdit.width = '16'
+      imgEdit.height = '16'
+      btnEdit.append(imgEdit)
+      edit.append(btnEdit)
+
+      const del = row.insertCell(-1)
+      const btnDel = document.createElement('button')
+      btnDel.classList.add('btn')
+      btnDel.classList.add('btn-sm')
+      btnDel.setAttribute('data-bs-toggle', 'modal')
+      btnDel.setAttribute('data-bs-target', '#delete-modal')
+      btnDel.addEventListener('click', () => {
+        const userId = document.querySelector('#del-user-id')
+        userId.innerText = user.id
+        const delName = document.querySelector('#delete-name')
+        delName.innerText = user.name
+      })
+      const imgDel = document.createElement('img')
+      imgDel.src = './trash.svg'
+      imgDel.width = '16'
+      imgDel.height = '16'
+      btnDel.append(imgDel)
+      del.append(btnDel)
     }
 
     const tblLogsBody = document.querySelector('#tbl-logs-body')
@@ -111,6 +130,19 @@ window.addEventListener('DOMContentLoaded', () => {
   initWS(websocket)
   receiveMsg(websocket)
 
+  const btnAdd = document.querySelector('#btn-add')
+  btnAdd.addEventListener('click', () => {
+    const event = {
+      type: 'add',
+      user: {
+        name: document.querySelector('#add-input-name').value,
+        code: document.querySelector('#add-input-code').value
+      }
+    }
+    websocket.send(JSON.stringify(event))
+
+  })
+
   const btnSave = document.querySelector('#btn-save')
   btnSave.addEventListener('click', () => {
     const event = {
@@ -119,6 +151,17 @@ window.addEventListener('DOMContentLoaded', () => {
         id: document.querySelector('#user-id').innerText,
         name: document.querySelector('#floating-input-name').value,
         code: document.querySelector('#floating-input-code').value
+      }
+    }
+    websocket.send(JSON.stringify(event))
+  })
+
+  const btnDelYes = document.querySelector('#btn-del-yes')
+  btnDelYes.addEventListener('click', () => {
+    const event = {
+      type: 'delete',
+      user: {
+        id: document.querySelector('#del-user-id').innerText,
       }
     }
     websocket.send(JSON.stringify(event))

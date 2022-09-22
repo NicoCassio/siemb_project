@@ -7,6 +7,7 @@ CONNECTED = set()
 
 DATABASE = 'access.db'
 CON = sqlite3.connect(DATABASE)
+CON.execute('PRAGMA foreign_keys = ON')
 CUR = CON.cursor()
 
 async def get_data():
@@ -46,11 +47,35 @@ async def handler(websocket):
         if event['type'] == 'init':
             event = await get_data()
             await websocket.send(json.dumps(event))
+        elif event['type'] == 'add':
+            user = event['user']
+
+            query = 'INSERT INTO users(name) VALUES (?)'
+            CUR.execute(query, (user['name'].lower(),))
+            CON.commit()
+
+            query = 'INSERT INTO codes(code, user_id) SELECT ?, id FROM users WHERE name = ?'
+            CUR.execute(query, (user['code'],user['name'].lower()))
+            CON.commit()
+
+            event = await get_data()
+            print(len(CONNECTED))
+            websockets.broadcast(CONNECTED, json.dumps(event))
+        elif event['type'] == 'delete':
+            user_id = event['user']['id']
+
+            query = 'DELETE FROM users WHERE id = ?'
+            CUR.execute(query, (user_id,))
+            CON.commit()
+
+            event = await get_data()
+            print(len(CONNECTED))
+            websockets.broadcast(CONNECTED, json.dumps(event))
         elif event['type'] == 'edit':
             user = event['user']
 
             query = 'UPDATE users SET name = ? WHERE id = ?'
-            CUR.execute(query, (user['name'], user['id']))
+            CUR.execute(query, (user['name'].lower(), user['id']))
             CON.commit()
 
             query = 'UPDATE codes SET code = ? WHERE user_id = ?'

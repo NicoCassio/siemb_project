@@ -48,7 +48,34 @@
           </li>
         </ul>
       </nav> -->
+      <div class="d-flex justify-content-end fixed-bottom">
+        <button type="button" class="btn btn-primary mb-4 me-4" data-bs-toggle="modal"
+          data-bs-target="#add-modal">add</button>
+      </div>
     </main>
+  </div>
+  <div class="modal fade" id="add-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">add</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="add-input-name" placeholder="name">
+            <label for="add-input-name">name</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="add-input-code" placeholder="code">
+            <label for="add-input-code">code</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btn-add" data-bs-dismiss="modal">add</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="modal fade" id="edit-modal" tabindex="-1">
     <div class="modal-dialog">
@@ -69,6 +96,23 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" id="btn-save" data-bs-dismiss="modal">save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="delete-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">delete: <span id="del-user-id"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete the user <b id="delete-name"></b>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-del-no" data-bs-dismiss="modal">no</button>
+          <button type="button" class="btn btn-primary" id="btn-del-yes" data-bs-dismiss="modal">yes</button>
         </div>
       </div>
     </div>

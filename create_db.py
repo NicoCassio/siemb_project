@@ -30,6 +30,7 @@ def main():
     DATABASE = 'access.db'
 
     con = sqlite3.connect(DATABASE)
+    con.execute('PRAGMA foreign_keys = ON')
 
     end_time = time.perf_counter()
     elapsed_time = end_time - START_TIME

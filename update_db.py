@@ -9,6 +9,13 @@ def handle_unhandled_exceptions(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
+    for _ in range(100):
+        try:
+            ws_client.main()
+        except:
+            continue
+        else:
+            break
     logging.critical('Unhandled exception', exc_info=(exc_type, exc_value, exc_traceback))
     logging.info('END')
 
@@ -31,6 +38,7 @@ def main():
 
     DATABASE = 'access.db'
     con = sqlite3.connect(DATABASE)
+    con.execute('PRAGMA foreign_keys = ON')
     cur = con.cursor()
 
     query = 'SELECT * FROM users'
