@@ -3,6 +3,7 @@ import logging
 import sqlite3
 import sys
 import time
+import ws_client
 
 def handle_unhandled_exceptions(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
@@ -96,6 +97,8 @@ def main():
         query = 'DELETE FROM codes WHERE code = ?'
         cur.executemany(query, old_codes)
         con.commit()
+
+    ws_client.main()
 
 if __name__ == '__main__':
     main()

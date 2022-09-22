@@ -2,6 +2,7 @@ import logging
 import sqlite3
 import sys
 import time
+import ws_client
 
 def handle_unhandled_exceptions(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
@@ -39,6 +40,8 @@ def has_permission(code=None):
         query = 'INSERT INTO logs(user_id, datetime) SELECT user_id, ? FROM codes WHERE code = ?'
         cur.execute(query, (access_time, code))
         con.commit()
+
+        ws_client.main()
 
         return True
 

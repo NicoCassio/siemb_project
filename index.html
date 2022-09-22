@@ -50,6 +50,29 @@
       </nav> -->
     </main>
   </div>
+  <div class="modal fade" id="edit-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">edit: <span id="user-id"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floating-input-name" placeholder="name">
+            <label for="floating-input-name">name</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floating-input-code" placeholder="code">
+            <label for="floating-input-code">code</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btn-save" data-bs-dismiss="modal">save</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="main.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>

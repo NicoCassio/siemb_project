@@ -38,7 +38,7 @@ def main():
     cur = con.cursor()
 
     drop_table_users = 'DROP TABLE IF EXISTS users'
-    drop_table_codes = 'DROP TABLE IF EXISTS code'
+    drop_table_codes = 'DROP TABLE IF EXISTS codes'
     drop_table_logs = 'DROP TABLE IF EXISTS logs'
 
     create_table_users = """ CREATE TABLE IF NOT EXISTS users (
