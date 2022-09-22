@@ -1,48 +1,12 @@
-function createTblUsers() {
-  const tbl = document.querySelector('#tbl-users')
-  const head = document.createElement('thead')
-  const body = document.createElement('tbody')
-  body.id = 'tbl-users-body'
-  const row = document.createElement('tr')
-  const headers = ['name', 'code']
-
-  removeChildren(tbl)
-
+function createTbl(tbl, headers) {
+  const head = tbl.createTHead()
+  const body = tbl.createTBody()
+  body.id = tbl.id + '-body'
+  const headRow = head.insertRow(-1)
   for (const header of headers) {
-    const headerElement = document.createElement('th')
-    headerElement.innerText = header
-    row.append(headerElement)
-  }
-
-  head.append(row)
-  tbl.append(head)
-  tbl.append(body)
-}
-
-function createTblLogs() {
-  const tbl = document.querySelector('#tbl-logs')
-  const head = document.createElement('thead')
-  const body = document.createElement('tbody')
-  body.id = 'tbl-logs-body'
-  const row = document.createElement('tr')
-  const headers = ['date', 'time', 'name']
-
-  removeChildren(tbl)
-
-  for (const header of headers) {
-    const headerElement = document.createElement('th')
-    headerElement.innerText = header
-    row.append(headerElement)
-  }
-
-  head.append(row)
-  tbl.append(head)
-  tbl.append(body)
-}
-
-function removeChildren(element) {
-  while (element.firstChild) {
-    element.removeChild(element.lastChild)
+    const cell = document.createElement('th')
+    cell.innerText = header
+    headRow.append(cell)
   }
 }
 
@@ -53,38 +17,29 @@ function initWS(websocket) {
   })
 }
 
-function showMessage(message) {
-  window.setTimeout(() => window.alert(message), 50)
-}
-
 function receiveMsg(websocket) {
   websocket.addEventListener("message", ({ data }) => {
     const event = JSON.parse(data)
-    console.log(event)
-    for (const user of event.users) {
+    tblData.users = event.users
+    tblData.logs = event.logs
+
+    for (const user of tblData.users) {
       const body = document.querySelector('#tbl-users-body')
-      const row = document.createElement('tr')
-      const name = document.createElement('td')
+      const row = body.insertRow(-1)
+      const name = row.insertCell(-1)
       name.innerText = user[0]
-      row.append(name)
-      const code = document.createElement('td')
+      const code = row.insertCell(-1)
       code.innerText = user[1]
-      row.append(code)
-      body.append(row)
     }
-    for (const log of event.logs) {
+    for (const log of tblData.logs) {
       const body = document.querySelector('#tbl-logs-body')
-      const row = document.createElement('tr')
-      const date = document.createElement('td')
+      const row = body.insertRow(-1)
+      const date = row.insertCell(-1)
       date.innerText = log[0]
-      row.append(date)
-      const time = document.createElement('td')
+      const time = row.insertCell(-1)
       time.innerText = log[1]
-      row.append(time)
-      const name = document.createElement('td')
+      const name = row.insertCell(-1)
       name.innerText = log[2]
-      row.append(name)
-      body.append(row)
     }
   })
 }
@@ -94,12 +49,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnLogs = document.querySelector('#btn-logs')
   const contUsers = document.querySelector('#cont-users')
   const contLogs = document.querySelector('#cont-logs')
+  const tblUsers = document.querySelector('#tbl-users')
   const tblLogs = document.querySelector('#tbl-logs')
+
+  tblData = {
+    users: [],
+    logs: []
+  }
+
   btnUsers.addEventListener('click', () => {
     btnUsers.classList.add('active')
     contUsers.classList.remove('d-none')
     btnLogs.classList.remove('active')
     contLogs.classList.add('d-none')
+    k
   })
   btnLogs.addEventListener('click', () => {
     btnUsers.classList.remove('active')
@@ -107,10 +70,15 @@ window.addEventListener('DOMContentLoaded', () => {
     contUsers.classList.add('d-none')
     contLogs.classList.remove('d-none')
   })
-  createTblUsers()
-  createTblLogs()
 
-  const websocket = new WebSocket("ws://localhost:8001/")
+  const HEADERS = {
+    users: ['name', 'code'],
+    logs: ['date', 'time', 'name']
+  }
+  createTbl(tblUsers, HEADERS.users)
+  createTbl(tblLogs, HEADERS.logs)
+
+  const websocket = new WebSocket("ws://192.168.1.118:8001/")
   initWS(websocket)
   receiveMsg(websocket)
 })
