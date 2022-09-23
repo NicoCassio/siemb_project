@@ -1,3 +1,4 @@
+import door
 import logging
 import sqlite3
 import sys
@@ -42,9 +43,13 @@ def has_permission(code=None):
         cur.execute(query, (access_time, code))
         con.commit()
 
+        door.release()
+
         ws_client.main()
 
         return True
+
+    door.prohibited()
 
 def main():
     has_permission(code='taasdeste')
